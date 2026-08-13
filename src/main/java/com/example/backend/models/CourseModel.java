@@ -11,6 +11,7 @@
 
     import jakarta.persistence.ManyToMany;
     import jakarta.persistence.OneToMany;
+    import jakarta.persistence.PreRemove;
 
 
 
@@ -29,6 +30,15 @@
         @ManyToMany(mappedBy = "courses")
         @JsonIgnore
         private List<StudentModel> students;
+
+        @PreRemove
+          private void removeCourseFromStudents() {
+
+            for (StudentModel student : students) {
+            student.getCourses().remove(this);
+            }
+               students.clear();
+}
 
 
         public List<StudentModel> getStudents() {
